@@ -287,16 +287,23 @@
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h4>Correo Electrónico</h4>
-                            <p>contacto@casadelamujereltigre.gob.ve</p>
+                            <p>inmaujermrn@gmail.com</p>
                         </div>
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form>
-                        <input type="text" placeholder="Tu Nombre" required>
-                        <input type="email" placeholder="Tu Correo" required>
-                        <textarea placeholder="¿En qué te podemos ayudar?" rows="4" required></textarea>
-                        <button type="submit" class="btn-primary" style="width: 100%;">Enviar Mensaje</button>
+                    <h3 style="color: var(--color-blue); margin-bottom: 0.5rem; font-size: 1.5rem;">Buzón de Sugerencias</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.95rem; color: #666;">Ayúdanos a mejorar. Envíanos tus ideas o sugerencias directamente a nuestro correo.</p>
+                    <form action="https://formsubmit.co/inmaujermrn@gmail.com" method="POST">
+                        <!-- FormSubmit Configuration -->
+                        <input type="hidden" name="_subject" value="Nueva Sugerencia - INMAMUJER">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="box">
+                        
+                        <input type="text" name="Nombre" placeholder="Tu Nombre (Opcional)">
+                        <input type="email" name="Correo" placeholder="Tu Correo Electrónico" required>
+                        <textarea name="Sugerencia" placeholder="Escribe tu sugerencia, idea o comentario aquí..." rows="4" required></textarea>
+                        <button type="submit" class="btn-primary" style="width: 100%;">Enviar Sugerencia</button>
                     </form>
                 </div>
             </div>
