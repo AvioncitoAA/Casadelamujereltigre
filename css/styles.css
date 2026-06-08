@@ -126,6 +126,29 @@ body {
     margin-top: 5rem;
 }
 
+.slogan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--color-pink) 0%, #ff758c 100%);
+    color: var(--color-white);
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(240, 46, 132, 0.4);
+    animation: pulse-glow 2s infinite;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 0 0 rgba(240, 46, 132, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(240, 46, 132, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(240, 46, 132, 0); }
+}
+
 .hero-title {
     font-size: clamp(3rem, 8vw, 7rem);
     color: var(--color-white);
