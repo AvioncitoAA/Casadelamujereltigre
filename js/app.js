@@ -151,6 +151,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
+    // Sugerencias Form Logic (Web3Forms)
+    const sugerenciasForm = document.getElementById('sugerencias-form');
+    const formResult = document.getElementById('form-result');
+
+    if (sugerenciasForm) {
+        sugerenciasForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = sugerenciasForm.querySelector('button');
+            const originalText = btn.textContent;
+            
+            btn.textContent = 'Enviando...';
+            btn.style.opacity = '0.7';
+            btn.disabled = true;
+
+            const formData = new FormData(sugerenciasForm);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
+            })
+            .then(async (response) => {
+                let json = await response.json();
+                if (response.status == 200) {
+                    formResult.style.display = 'block';
+                    formResult.style.color = '#28a745';
+                    formResult.textContent = '¡Sugerencia enviada con éxito! Gracias por escribirnos.';
+                    sugerenciasForm.reset();
+                } else {
+                    formResult.style.display = 'block';
+                    formResult.style.color = '#dc3545';
+                    formResult.textContent = 'Hubo un error al enviar. Intenta de nuevo.';
+                }
+            })
+            .catch(error => {
+                formResult.style.display = 'block';
+                formResult.style.color = '#dc3545';
+                formResult.textContent = 'Error de conexión. Intenta más tarde.';
+            })
+            .then(function() {
+                btn.textContent = originalText;
+                btn.style.opacity = '1';
+                btn.disabled = false;
+                setTimeout(() => {
+                    formResult.style.display = 'none';
+                }, 5000);
+            });
+        });
+    }
+
     // Auto-add animate class to elements we want to animate
     const elementsToAnimate = document.querySelectorAll('.courses-header, .course-card, .split-content, .split-image, .faq-tabs, .faq-accordion, .gallery-item');
     elementsToAnimate.forEach(el => {
