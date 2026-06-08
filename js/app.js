@@ -94,46 +94,107 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatbotToggle = document.getElementById('chatbot-toggle');
     const chatbotWindow = document.getElementById('chatbot-window');
     const chatbotClose = document.getElementById('chatbot-close');
-    const chatInput = document.getElementById('chat-input');
-    const chatSend = document.getElementById('chat-send');
     const chatMessages = document.getElementById('chatbot-messages');
+    const chatOptionsContainer = document.getElementById('chat-options-container');
 
     chatbotToggle.addEventListener('click', () => {
         chatbotWindow.classList.toggle('hidden');
+        if (!chatbotWindow.classList.contains('hidden') && chatMessages.children.length <= 1) {
+            showMainMenu();
+        }
     });
 
     chatbotClose.addEventListener('click', () => {
         chatbotWindow.classList.add('hidden');
     });
 
-    const sendMessage = () => {
-        const text = chatInput.value.trim();
-        if (text) {
-            const userMsg = document.createElement('div');
-            userMsg.className = 'message user-message';
-            userMsg.textContent = text;
-            chatMessages.appendChild(userMsg);
-            
-            chatInput.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            setTimeout(() => {
-                const botMsg = document.createElement('div');
-                botMsg.className = 'message bot-message';
-                botMsg.textContent = 'Gracias por comunicarte con la Casa de la Mujer de El Tigre. Pronto te atenderemos.';
-                chatMessages.appendChild(botMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        }
+    const coursePrices = {
+        'Maquillaje': 10,
+        'Manualidades': 10,
+        'Repostería Básica': 10,
+        'Panadería': 10,
+        'Ropa Íntima': 10,
+        'Inglés Intermedio': 20,
+        'Inglés Avanzado': 20,
+        'Inglés Básico': 20,
+        'Inglés Teen': 20,
+        'Barbería Básica': 10,
+        'Asistente de Farmacia': 20,
+        'Costura Básica': 10,
+        'Costura Avanzada': 20,
+        'Barbería Avanzada': 20,
+        'Peluquería': 10,
+        'Cejas y Pestañas': 10,
+        'Manicura': 20,
+        'Asistente Contable': 20,
+        'Marketing': 20,
+        'Oratoria': 10,
+        'Seguridad Industrial': 30,
+        'Repostería Avanzado': 20,
+        'Decoración de Torta': 10,
+        'Diseño Gráfico': 20,
+        'Masajes': 20
     };
 
-    chatSend.addEventListener('click', sendMessage);
+    const addMessage = (text, isUser = false) => {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        msgDiv.innerHTML = text; // allow bolding
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
 
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
-    });
+    const renderOptions = (options) => {
+        if (!chatOptionsContainer) return;
+        chatOptionsContainer.innerHTML = '';
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = `chat-option-btn ${opt.isBack ? 'pink' : ''}`;
+            btn.textContent = opt.label;
+            btn.addEventListener('click', () => {
+                addMessage(opt.label, true);
+                chatOptionsContainer.innerHTML = ''; // hide options while bot thinks
+                setTimeout(() => opt.action(), 500); // slight delay for bot reply
+            });
+            chatOptionsContainer.appendChild(btn);
+        });
+    };
+
+    const showMainMenu = () => {
+        renderOptions([
+            { label: '📚 Cursos Disponibles', action: showCourses },
+            { label: '🕒 Horarios', action: showSchedules },
+            { label: '💰 Precios', action: showPricingOptions }
+        ]);
+    };
+
+    const showCourses = () => {
+        addMessage('Ofrecemos cursos en varias áreas:<br><br>- <b>Belleza:</b> Peluquería, Barbería, Maquillaje, Cejas y Pestañas, Manicura.<br>- <b>Gastronomía:</b> Panadería, Repostería Básica/Avanzada, Decoración de Tortas.<br>- <b>Idiomas:</b> Inglés (Kids, Teen, Básico, Intermedio, Avanzado).<br>- <b>Desarrollo Integral:</b> Asistente Contable/Farmacia, Oratoria, Marketing, Diseño Gráfico, Masajes, Seguridad Industrial.<br>- <b>Indumentaria:</b> Costura Básica/Avanzada, Ropa Íntima, Manualidades.');
+        setTimeout(showMainMenu, 300);
+    };
+
+    const showSchedules = () => {
+        addMessage('Los horarios son a coordinar directamente en el momento de tu inscripción presencial. ¡Acércate a nuestra sede y elige el que más te convenga!');
+        setTimeout(showMainMenu, 300);
+    };
+
+    const showPricingOptions = () => {
+        addMessage('El costo general de <b>inscripción es de $5</b>. Para consultar la mensualidad, selecciona el curso que deseas:');
+        
+        const sortedCourses = Object.keys(coursePrices).sort();
+        const options = sortedCourses.map(course => ({
+            label: course,
+            action: () => {
+                addMessage(`El curso de <b>${course}</b> tiene una mensualidad de <b>$${coursePrices[course]}</b> (además de los $5 de inscripción general).<br><br><i>*Todos los montos son calculados a la tasa oficial del BCV.</i>`);
+                renderOptions([{ label: '🔙 Volver al inicio', isBack: true, action: showMainMenu }]);
+            }
+        }));
+        
+        options.push({ label: '🔙 Volver al menú', isBack: true, action: showMainMenu });
+        renderOptions(options);
+    };
+
+    showMainMenu();
 
     // Scroll Animations Observer
     const observerOptions = {
